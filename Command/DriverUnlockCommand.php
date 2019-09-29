@@ -2,6 +2,7 @@
 
 namespace Lexik\Bundle\MaintenanceBundle\Command;
 
+use Lexik\Bundle\MaintenanceBundle\Drivers\DriverFactory;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -14,6 +15,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DriverUnlockCommand extends Command
 {
+    /**
+     * @var DriverFactory
+     */
+    private $driverFactory;
+
+    /**
+     * @param DriverFactory $driverFactory
+     */
+    public function __construct(DriverFactory $driverFactory)
+    {
+        $this->driverFactory = $driverFactory;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -39,7 +55,7 @@ EOT
             return;
         }
 
-        $driver = $this->getContainer()->get('lexik_maintenance.driver.factory')->getDriver();
+        $driver = $this->driverFactory->getDriver();
 
         $unlockMessage = $driver->getMessageUnlock($driver->unlock());
 
